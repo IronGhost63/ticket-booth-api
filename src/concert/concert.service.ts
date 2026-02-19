@@ -43,11 +43,11 @@ export class ConcertService {
     return await this.concertRepository.findOneBy({ id: concertId });
   }
 
-  update(id: number, updateConcertDto: UpdateConcertDto) {
+  updateConcert(id: number, concert: UpdateConcertDto) {
     return `This action updates a #${id} concert`;
   }
 
-  remove(id: number) {
+  deleteConcert(id: number) {
     return `This action removes a #${id} concert`;
   }
 }
