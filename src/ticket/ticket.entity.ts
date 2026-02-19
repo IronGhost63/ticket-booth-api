@@ -20,10 +20,6 @@ export class Ticket {
   @Column()
   seatNumber: string;
 
-  @Column({
-    default: TicketStatus.ACTIVE,
-    type: 'enum',
-    enum: TicketStatus
-  })
+  @Column({default: 'active'})
   status: string;
 }
