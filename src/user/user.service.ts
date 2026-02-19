@@ -1,4 +1,5 @@
-import { Injectable, Inject, Logger, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, Logger, InternalServerErrorException } from '@nestjs/common';
+import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { User } from "./user.entity";
 import { hash } from 'bcrypt';
@@ -8,12 +9,12 @@ export class UserService {
   private readonly logger = new Logger(UserService.name);
 
   constructor(
-    @Inject('USER_REPOSITORY')
+    @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async listUsers(): Promise<User[]> {
-    return this.userRepository.find();
+  async listUsers() {
+    return await this.userRepository.find();
   }
 
   async createUser( user: User ) {
