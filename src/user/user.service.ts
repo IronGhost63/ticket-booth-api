@@ -1,9 +1,9 @@
-import { Injectable, Logger, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, Logger, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { User } from "./user.entity";
 import { CreateUserDto } from "./dto/create-user.dto";
-import { hash } from 'bcrypt';
+import { hash, compare } from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -56,6 +56,18 @@ export class UserService {
   }
 
   async verifyUserPassword( email: string, password: string ) {
-    return await this.userRepository.findOneBy({ email, password });
+    const userFromEmail = await this.userRepository.findOneBy({ email });
+
+    if ( !userFromEmail) {
+      throw new UnauthorizedException('Credentials are not valid');
+    }
+
+    const authenticated = await compare(password, userFromEmail.password);
+
+    if (!authenticated) {
+      throw new UnauthorizedException('Credentials are not valid');
+    }
+
+    return userFromEmail;
   }
 }

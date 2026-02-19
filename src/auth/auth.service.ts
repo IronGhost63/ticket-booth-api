@@ -5,7 +5,6 @@ import { Response } from "express";
 import { hash, compare } from 'bcrypt';
 import { Repository } from "typeorm";
 import { UserService } from '../user/user.service';
-import { User } from '../user/user.entity';
 import { RefreshToken } from './refresh-token.entity';
 import { jwtConstants } from "src/constant";
 import { RefreshDto } from "./dto/refresh.dto";
@@ -15,7 +14,7 @@ export class AuthService {
   private readonly logger = new Logger(AuthService.name);
 
   constructor(
-    @InjectRepository(User)
+    @InjectRepository(RefreshToken)
     private readonly refreshTokenRepository: Repository<RefreshToken>,
     private userService: UserService,
     private jwtService: JwtService
@@ -69,15 +68,18 @@ export class AuthService {
         expiresIn: jwtConstants.refreshSecretExpires,
       });
 
-      await this.refreshTokenRepository.save({
-        userId: user.id,
-        refreshToken: await hash(refreshToken, 10),
-        expire: expiresRefreshToken.toISOString(),
-      });
+      const insertRefreshToken = new RefreshToken();
+
+      insertRefreshToken.userId = user.id;
+      insertRefreshToken.refreshToken = await hash(refreshToken, 10);
+      insertRefreshToken.expire = expiresRefreshToken.toISOString();
+
+      await this.refreshTokenRepository.save(insertRefreshToken);
 
       return {accessToken, refreshToken};
     } catch (error) {
       this.logger.error(`Login failed for user ${email}: ${error.message}`);
+      this.logger.debug(`Stack trace: ${error.stack}`);
 
       throw new UnauthorizedException('Invalid credentials');
     }
