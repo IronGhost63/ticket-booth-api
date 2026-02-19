@@ -2,6 +2,7 @@ import { Injectable, Logger, InternalServerErrorException } from '@nestjs/common
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { User } from "./user.entity";
+import { CreateUserDto } from "./dto/create-user.dto";
 import { hash } from 'bcrypt';
 
 @Injectable()
@@ -17,14 +18,18 @@ export class UserService {
     return await this.userRepository.find();
   }
 
-  async createUser( user: User ) {
+  async createUser( user: CreateUserDto ) {
     try {
-      const insertUser = {
-        ...user,
-        password: hash(user.password, 10)
-      }
+      const insertUser = new User();
+
+      insertUser.name = user.name;
+      insertUser.email = user.email;
+      insertUser.password = await hash(user.password, 10);
+      insertUser.isAdmin = false;
 
       await this.userRepository.save(insertUser);
+
+      return insertUser;
     } catch( error ) {
       this.logger.error(`Failed to create user: ${error.message}`);
 
@@ -43,10 +48,14 @@ export class UserService {
   }
 
   async getUserById( userId: number ) {
-    return this.userRepository.findOneBy({ id: userId });
+    return await this.userRepository.findOneBy({ id: userId });
   }
 
   async getUserByEmail( email: string ) {
-    return this.userRepository.findOneBy({ email });
+    return await this.userRepository.findOneBy({ email });
+  }
+
+  async verifyUserPassword( email: string, password: string ) {
+    return await this.userRepository.findOneBy({ email, password });
   }
 }

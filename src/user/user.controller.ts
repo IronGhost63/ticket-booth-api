@@ -1,6 +1,6 @@
-import { Controller, Post, Body, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, ConflictException } from '@nestjs/common';
 import { UserService } from "./user.service";
-import { User } from "./user.entity";
+import { CreateUserDto } from "./dto/create-user.dto";
 
 @Controller('user')
 export class UserController {
@@ -19,7 +19,16 @@ export class UserController {
   }
 
   @Post()
-  async createUser( @Body() user: User ) {
-    return this.userService.createUser(user);
+  async createUser( @Body() user: CreateUserDto ) {
+    try {
+      const newUser = await this.userService.createUser(user);
+
+      return {
+        message: 'User created successfully',
+        userId: newUser.id,
+      };
+    } catch( error ) {
+      throw new ConflictException( 'Email already exists' );
+    }
   }
 }
