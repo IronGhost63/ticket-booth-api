@@ -37,8 +37,6 @@ export class ConcertService {
 
       throw new BadGatewayException('An unexpected error occurred while creating a concert');
     }
-
-    return 'This action adds a new concert';
   }
 
   async getConcertById( concertId: number ) {
