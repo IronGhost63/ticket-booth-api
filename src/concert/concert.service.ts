@@ -1,19 +1,48 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger, BadGatewayException } from '@nestjs/common';
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Concert } from './concert.entity';
 import { CreateConcertDto } from './dto/create-concert.dto';
 import { UpdateConcertDto } from './dto/update-concert.dto';
 
 @Injectable()
 export class ConcertService {
-  create(createConcertDto: CreateConcertDto) {
+  private readonly logger = new Logger(ConcertService.name);
+
+  constructor(
+    @InjectRepository(Concert)
+    private concertRepository: Repository<Concert>
+  ){}
+
+  async listConcerts() {
+    return await this.concertRepository.find();
+  }
+
+  async createConcert(createConcertDto: CreateConcertDto) {
+    try {
+      const concert = new Concert();
+
+      concert.name = createConcertDto.name;
+      concert.description = createConcertDto.description;
+      concert.total_seats = parseInt(createConcertDto.total_seats);
+
+      await this.concertRepository.save(concert);
+
+      return {
+        message: 'Concert created successfully',
+        concertId: concert.id,
+      }
+    } catch ( error ) {
+      this.logger.error(`Failed to create concert: ${error.message}`);
+
+      throw new BadGatewayException('An unexpected error occurred while creating a concert');
+    }
+
     return 'This action adds a new concert';
   }
 
-  findAll() {
-    return `This action returns all concert`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} concert`;
+  async getConcertById( concertId: number ) {
+    return await this.concertRepository.findOneBy({ id: concertId });
   }
 
   update(id: number, updateConcertDto: UpdateConcertDto) {

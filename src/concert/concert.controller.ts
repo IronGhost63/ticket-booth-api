@@ -5,30 +5,34 @@ import { UpdateConcertDto } from './dto/update-concert.dto';
 
 @Controller('concert')
 export class ConcertController {
-  constructor(private readonly concertService: ConcertService) {}
+  constructor(
+    private readonly concertService: ConcertService
+  ) {}
 
   @Post()
-  create(@Body() createConcertDto: CreateConcertDto) {
-    return this.concertService.create(createConcertDto);
+  createConcert(@Body() concert: CreateConcertDto) {
+    console.log(concert);
+
+    return this.concertService.createConcert(concert);
   }
 
   @Get()
-  findAll() {
-    return this.concertService.findAll();
+  getAllConcerts() {
+    return this.concertService.listConcerts();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.concertService.findOne(+id);
+  getConcertById(@Param('id') id: string) {
+    return this.concertService.getConcertById(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateConcertDto: UpdateConcertDto) {
+  updateConcert(@Param('id') id: string, @Body() updateConcertDto: UpdateConcertDto) {
     return this.concertService.update(+id, updateConcertDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  deleteConcert(@Param('id') id: string) {
     return this.concertService.remove(+id);
   }
 }
