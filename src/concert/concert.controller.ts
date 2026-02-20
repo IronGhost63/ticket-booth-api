@@ -26,19 +26,19 @@ export class ConcertController {
   }
 
   @Get(':id')
-  getConcertById(@Param('id') id: string) {
-    return this.concertService.getConcertById(+id);
+  getConcertById(@Param('id') id: number) {
+    return this.concertService.getConcertById(id);
   }
 
   @Patch(':id')
   @Roles(Role.ADMIN)
-  updateConcert(@Param('id') id: string, @Body() updateConcertDto: UpdateConcertDto) {
-    return this.concertService.updateConcert(+id, updateConcertDto);
+  updateConcert(@Param('id') id: number, @Body() updateConcertDto: UpdateConcertDto) {
+    return this.concertService.updateConcert(id, updateConcertDto);
   }
 
   @Delete(':id')
   @Roles(Role.ADMIN)
-  deleteConcert(@Param('id') id: string) {
-    return this.concertService.deleteConcert(+id);
+  deleteConcert(@Param('id') id: number) {
+    return this.concertService.deleteConcert(id);
   }
 }

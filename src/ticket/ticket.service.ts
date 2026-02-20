@@ -103,10 +103,6 @@ export class TicketService {
       };
     });
 
-    reservedSeats.forEach( ticket => {
-
-    });
-
     return totalSeats;
   }
 
