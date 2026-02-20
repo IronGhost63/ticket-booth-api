@@ -6,7 +6,6 @@ import { UpdateTicketDto } from './dto/update-ticket.dto';
 import { RolesGuard } from "src/auth/guard/roles.guard";
 import { Roles } from "src/auth/roles.decorator";
 import { Role } from "src/auth/roles.enum";
-import e from "express";
 
 @Controller('ticket')
 @UseGuards(AuthGuard('jwt'), RolesGuard)
