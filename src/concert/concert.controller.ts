@@ -28,11 +28,11 @@ export class ConcertController {
 
   @Patch(':id')
   updateConcert(@Param('id') id: string, @Body() updateConcertDto: UpdateConcertDto) {
-    return this.concertService.update(+id, updateConcertDto);
+    return this.concertService.updateConcert(+id, updateConcertDto);
   }
 
   @Delete(':id')
   deleteConcert(@Param('id') id: string) {
-    return this.concertService.remove(+id);
+    return this.concertService.deleteConcert(+id);
   }
 }

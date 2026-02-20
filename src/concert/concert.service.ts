@@ -1,4 +1,4 @@
-import { Injectable, Logger, BadGatewayException } from '@nestjs/common';
+import { Injectable, Logger, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Concert } from './concert.entity';
@@ -35,7 +35,7 @@ export class ConcertService {
     } catch ( error ) {
       this.logger.error(`Failed to create concert: ${error.message}`);
 
-      throw new BadGatewayException('An unexpected error occurred while creating a concert');
+      throw new BadRequestException('An unexpected error occurred while creating a concert');
     }
   }
 
@@ -43,11 +43,11 @@ export class ConcertService {
     return await this.concertRepository.findOneBy({ id: concertId });
   }
 
-  updateConcert(id: number, concert: UpdateConcertDto) {
+  async updateConcert(id: number, concert: UpdateConcertDto) {
     return `This action updates a #${id} concert`;
   }
 
-  deleteConcert(id: number) {
+  async deleteConcert(id: number) {
     return `This action removes a #${id} concert`;
   }
 }
