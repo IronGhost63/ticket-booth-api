@@ -14,8 +14,14 @@ export class TicketController {
 
   @Get()
   @Roles(Role.ADMIN, Role.USER)
-  getAllUserTickets(@Request() req ) {
+  getCurrentUserTickets(@Request() req ) {
     return this.ticketService.getUserTickets( req.user.id );
+  }
+
+  @Get('/user/:userId')
+  @Roles(Role.ADMIN)
+  getUserTickets(@Param() userId: number) {
+    return this.ticketService.getUserTickets( userId );
   }
 
   @Get(':id')

@@ -62,6 +62,7 @@ export class TicketService {
     const results = await this.ticketRepository
       .createQueryBuilder('ticket')
       .innerJoinAndSelect(Concert, 'concert', 'ticket.concertId = concert.id')
+      .where("ticket.userId = :id", { id: userId })
       .getRawMany();
 
     const tickets = results.map( data => {
