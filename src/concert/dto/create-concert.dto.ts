@@ -10,4 +10,6 @@ export class CreateConcertDto {
   @IsNumber( {}, { message: 'Total seats must be a number' } )
   @IsNotEmpty( { message: 'Total seats should not be empty' } )
   total_seats: string;
+
+  date: string;
 }

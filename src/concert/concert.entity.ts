@@ -11,6 +11,9 @@ export class Concert {
   @Column()
   description: string;
 
+  @Column({nullable: true})
+  date: string;
+
   @Column()
   total_seats: number;
 }

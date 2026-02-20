@@ -18,13 +18,14 @@ export class ConcertService {
     return await this.concertRepository.find();
   }
 
-  async createConcert(createConcertDto: CreateConcertDto) {
+  async createConcert(payload: CreateConcertDto) {
     try {
       const concert = new Concert();
-
-      concert.name = createConcertDto.name;
-      concert.description = createConcertDto.description;
-      concert.total_seats = parseInt(createConcertDto.total_seats);
+payload
+      concert.name = payload.name;
+      concert.description = payload.description;
+      concert.total_seats = parseInt(payload.total_seats);
+      concert.date = payload.date;
 
       await this.concertRepository.save(concert);
 

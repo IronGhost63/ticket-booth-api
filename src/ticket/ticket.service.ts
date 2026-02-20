@@ -2,8 +2,6 @@ import { Injectable, Logger, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Ticket } from "./ticket.entity";
-import { User } from "src/user/user.entity";
-import { Concert } from "src/concert/concert.entity";
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
 import { ConcertService } from "src/concert/concert.service";
@@ -16,10 +14,6 @@ export class TicketService {
   constructor(
     @InjectRepository(Ticket)
     private ticketRepository: Repository<Ticket>,
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
-    @InjectRepository(Concert)
-    private concertRepository: Repository<Concert>,
     private userService: UserService,
     private concertService: ConcertService,
   ) {}
@@ -27,6 +21,11 @@ export class TicketService {
   async createTicket(ticket: CreateTicketDto) {
     const user = await this.userService.getUserById( ticket.userId );
     const concert = await this.concertService.getConcertById( ticket.concertId );
+    const existingTicket = await this.ticketRepository.findOneBy( { concertId: ticket.concertId, seatNumber: ticket.seatNumber, status: 'active'} );
+
+    if ( existingTicket ) {
+      throw new BadRequestException('Ticket for selected seat is already sold');
+    }
 
     if ( !user ) {
       throw new BadRequestException('Invalid user');
@@ -53,16 +52,22 @@ export class TicketService {
     }
   }
 
-  async getUserTickets() {
-
+  async getUserTickets(userId: number) {
+    return await this.ticketRepository.findBy({userId});
   }
 
-  async getConcertTickets() {
-
+  async getConcertTickets(concertId: number) {
+    return await this.ticketRepository.findBy({concertId, status: 'active'});
   }
 
   async getTicketById(id: number) {
-    return await this.ticketRepository.findBy({id});
+    return await this.ticketRepository.findOneBy({id});
+  }
+
+  async getUserTicket(id: number, userId: number) {
+    console.log({id, userId});
+
+    return await this.ticketRepository.findOneBy({id, userId})
   }
 
   update(id: number, updateTicketDto: UpdateTicketDto) {
