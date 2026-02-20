@@ -2,6 +2,8 @@ import { Injectable, Logger, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Ticket } from "./ticket.entity";
+import { TicketDto } from "./dto/ticket.dto";
+import { Concert } from "src/concert/concert.entity";
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
 import { ConcertService } from "src/concert/concert.service";
@@ -53,7 +55,25 @@ export class TicketService {
   }
 
   async getUserTickets(userId: number) {
-    return await this.ticketRepository.findBy({userId});
+    const results = await this.ticketRepository
+      .createQueryBuilder('ticket')
+      .innerJoinAndSelect(Concert, 'concert', 'ticket.concertId = concert.id')
+      .getRawMany();
+
+    const tickets = results.map( data => {
+      const ticket = new TicketDto();
+
+      ticket.id = data.ticket_id;
+      ticket.concert = data.concert_name;
+      ticket.concertId = data.concert_id;
+      ticket.userId = data.user_id;
+      ticket.seatNumber = data.ticket_seatNumber;
+      ticket.date = data.concert_date;
+
+      return ticket;
+    });
+
+    return tickets;
   }
 
   async getConcertTickets(concertId: number) {

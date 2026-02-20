@@ -8,7 +8,16 @@ export class TicketDto {
   @IsNotEmpty()
   concert: string;
 
+  @IsNotEmpty()
+  concertId: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  userId: number;
+
   @IsNumber()
   @IsNotEmpty()
   seatNumber: number;
+
+  date: string;
 }

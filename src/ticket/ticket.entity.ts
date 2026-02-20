@@ -1,4 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Concert } from "src/concert/concert.entity";
+import { User } from "src/user/user.entity";
 
 export enum TicketStatus {
   ACTIVE = "active",
@@ -11,9 +13,11 @@ export class Ticket {
   @PrimaryGeneratedColumn()
   id: number;
 
+  // @ManyToOne(() => Concert, (concert) => concert.id)
   @Column()
   concertId: number;
 
+  // @ManyToOne(() => User, user => user.id)
   @Column()
   userId: number;
 
