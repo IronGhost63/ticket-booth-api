@@ -42,6 +42,12 @@ export class TicketController {
     return this.ticketService.getConcertTickets( concertId );
   }
 
+  @Get('/concert/:concertId/availability')
+  @Roles(Role.ADMIN, Role.USER)
+  getSeatAvailability(@Param('concertId') concertId: number) {
+    return this.ticketService.getSeatAvailability( concertId );
+  }
+
   @Post()
   @Roles(Role.ADMIN, Role.USER)
   reserveTicket(@Body() payload: CreateTicketDto, @Request() req) {

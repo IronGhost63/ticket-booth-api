@@ -37,6 +37,10 @@ export class TicketService {
       throw new BadRequestException('Invalid concert');
     }
 
+    if ( ticket.seatNumber > concert.total_seats) {
+      throw new BadRequestException('Invalid seat number');
+    }
+
     try {
       const insertTicket = new Ticket();
 
@@ -78,6 +82,31 @@ export class TicketService {
 
   async getConcertTickets(concertId: number) {
     return await this.ticketRepository.findBy({concertId, status: 'active'});
+  }
+
+  async getSeatAvailability(concertId: number) {
+    const concert = await this.concertService.getConcertById(concertId);
+
+    if ( !concert ) {
+      throw new BadRequestException('Invalid concert id');
+    }
+
+    const reservedSeats = await this.ticketRepository.findBy({concertId, status: 'active'});
+    const totalSeats = [...Array(concert.total_seats).keys()].map( i => {
+      const seat = i + 1;
+      const soldTicket = reservedSeats.find( ticket => ticket.seatNumber === seat );
+
+      return {
+        seat: seat,
+        status: soldTicket ? 'sold' : 'available',
+      };
+    });
+
+    reservedSeats.forEach( ticket => {
+
+    });
+
+    return totalSeats;
   }
 
   async getTicketById(id: number) {
