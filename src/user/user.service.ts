@@ -4,6 +4,7 @@ import { Repository } from "typeorm";
 import { User } from "./user.entity";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { hash, compare } from 'bcrypt';
+import { Role } from "src/auth/roles.enum";
 
 @Injectable()
 export class UserService {
@@ -25,7 +26,7 @@ export class UserService {
       insertUser.name = user.name;
       insertUser.email = user.email;
       insertUser.password = await hash(user.password, 10);
-      insertUser.isAdmin = false;
+      insertUser.roles = Role.USER;
 
       await this.userRepository.save(insertUser);
 

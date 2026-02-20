@@ -1,18 +1,22 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { ConcertService } from './concert.service';
 import { CreateConcertDto } from './dto/create-concert.dto';
 import { UpdateConcertDto } from './dto/update-concert.dto';
+import { RolesGuard } from "../auth/guard/roles.guard";
+import { Roles } from '../auth/roles.decorator';
+import { Role } from "../auth/roles.enum";
 
 @Controller('concert')
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 export class ConcertController {
   constructor(
     private readonly concertService: ConcertService
   ) {}
 
   @Post()
+  @Roles(Role.ADMIN)
   createConcert(@Body() concert: CreateConcertDto) {
-    console.log(concert);
-
     return this.concertService.createConcert(concert);
   }
 

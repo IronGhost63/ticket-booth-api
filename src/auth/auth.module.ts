@@ -1,31 +1,3 @@
-// import { Module } from '@nestjs/common';
-// import { TypeOrmModule } from '@nestjs/typeorm';
-// import { JwtModule } from "@nestjs/jwt";
-// import { PassportModule } from '@nestjs/passport';
-// import { AuthService } from './auth.service';
-// import { UserModule } from '../user/user.module';
-// import { AccessTokenStrategy } from "./strategies/accessToken.strategy";
-// import { RefreshTokenStrategy } from "./strategies/jwt-refresh.strategy";
-// import { jwtConstants } from '../constant';
-// import { RefreshToken } from './refresh-token.entity';
-// import { AuthController } from './auth.controller';
-
-// @Module({
-//   imports: [
-//     TypeOrmModule.forFeature([RefreshToken]),
-//     UserModule,
-//     PassportModule,
-//     JwtModule.register({
-//       secret: jwtConstants.secret,
-//       signOptions: { expiresIn: jwtConstants.secretExpires },
-//     })
-//   ],
-//   providers: [AuthService, AccessTokenStrategy, RefreshTokenStrategy],
-//   exports: [AuthService],
-//   controllers: [AuthController],
-// })
-// export class AuthModule {}
-
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
