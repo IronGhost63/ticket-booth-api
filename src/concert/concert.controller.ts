@@ -3,9 +3,9 @@ import { AuthGuard } from '@nestjs/passport';
 import { ConcertService } from './concert.service';
 import { CreateConcertDto } from './dto/create-concert.dto';
 import { UpdateConcertDto } from './dto/update-concert.dto';
-import { RolesGuard } from "../auth/guard/roles.guard";
-import { Roles } from '../auth/roles.decorator';
-import { Role } from "../auth/roles.enum";
+import { RolesGuard } from "src/auth/guard/roles.guard";
+import { Roles } from 'src/auth/roles.decorator';
+import { Role } from "src/auth/roles.enum";
 
 @Controller('concert')
 @UseGuards(AuthGuard('jwt'), RolesGuard)
@@ -31,11 +31,13 @@ export class ConcertController {
   }
 
   @Patch(':id')
+  @Roles(Role.ADMIN)
   updateConcert(@Param('id') id: string, @Body() updateConcertDto: UpdateConcertDto) {
     return this.concertService.updateConcert(+id, updateConcertDto);
   }
 
   @Delete(':id')
+  @Roles(Role.ADMIN)
   deleteConcert(@Param('id') id: string) {
     return this.concertService.deleteConcert(+id);
   }

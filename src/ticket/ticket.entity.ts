@@ -18,7 +18,7 @@ export class Ticket {
   userId: number;
 
   @Column()
-  seatNumber: string;
+  seatNumber: number;
 
   @Column({default: 'active'})
   status: string;

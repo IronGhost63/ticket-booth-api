@@ -7,33 +7,28 @@ import { UpdateTicketDto } from './dto/update-ticket.dto';
 export class TicketController {
   constructor(private readonly ticketService: TicketService) {}
 
-  @Get()
-  findAll() {
-    return this.ticketService.findAll();
-  }
-
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.ticketService.findOne(+id);
+  findOne(@Param('id') id: number) {
+    return this.ticketService.getTicketById(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTicketDto: UpdateTicketDto) {
-    return this.ticketService.update(+id, updateTicketDto);
+  update(@Param('id') id: number, @Body() updateTicketDto: UpdateTicketDto) {
+    return this.ticketService.update(id, updateTicketDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.ticketService.remove(+id);
+  remove(@Param('id') id: number) {
+    return this.ticketService.remove(id);
   }
 
   @Get('/concert/:concertId')
-  getConcertTickets(@Param('concertId') concertId: string) {
+  getConcertTickets(@Param('concertId') concertId: number) {
     return `get seat map for concert ${concertId}`;
   }
 
   @Post('/concert/:concertId')
-  reserveTicket(@Param('concertId') concertId: string) {
+  reserveTicket(@Param('concertId') concertId: number) {
     return `reserve a ticket for concert ${concertId}`;
   }
 }

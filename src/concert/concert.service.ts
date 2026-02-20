@@ -39,6 +39,10 @@ export class ConcertService {
     }
   }
 
+  async getAvailableSeat( concertId: number ) {
+
+  }
+
   async getConcertById( concertId: number ) {
     return await this.concertRepository.findOneBy({ id: concertId });
   }

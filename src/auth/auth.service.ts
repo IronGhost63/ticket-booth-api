@@ -4,7 +4,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Response } from "express";
 import { hash, compare } from 'bcrypt';
 import { Repository } from "typeorm";
-import { UserService } from '../user/user.service';
+import { UserService } from 'src/user/user.service';
 import { RefreshToken } from './refresh-token.entity';
 import { jwtConstants } from "src/constant";
 import { RefreshDto } from "./dto/refresh.dto";
