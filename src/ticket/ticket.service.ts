@@ -66,7 +66,7 @@ export class TicketService {
       ticket.id = data.ticket_id;
       ticket.concert = data.concert_name;
       ticket.concertId = data.concert_id;
-      ticket.userId = data.user_id;
+      ticket.userId = data.ticket_userId;
       ticket.seatNumber = data.ticket_seatNumber;
       ticket.date = data.concert_date;
 
