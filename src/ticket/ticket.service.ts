@@ -37,7 +37,7 @@ export class TicketService {
       throw new BadRequestException('Invalid concert');
     }
 
-    if ( ticket.seatNumber > concert.total_seats) {
+    if ( ticket.seatNumber > concert.totalSeats) {
       throw new BadRequestException('Invalid seat number');
     }
 
@@ -93,7 +93,7 @@ export class TicketService {
     }
 
     const reservedSeats = await this.ticketRepository.findBy({concertId, status: 'active'});
-    const totalSeats = [...Array(concert.total_seats).keys()].map( i => {
+    const totalSeats = [...Array(concert.totalSeats).keys()].map( i => {
       const seat = i + 1;
       const soldTicket = reservedSeats.find( ticket => ticket.seatNumber === seat );
 

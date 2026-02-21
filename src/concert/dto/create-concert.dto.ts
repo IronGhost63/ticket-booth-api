@@ -6,10 +6,11 @@ export class CreateConcertDto {
   name: string;
 
   description: string;
+  date: string;
 
   @IsNumber( {}, { message: 'Total seats must be a number' } )
   @IsNotEmpty( { message: 'Total seats should not be empty' } )
-  total_seats: string;
+  totalSeats: number;
 
-  date: string;
+  coverImage: string;
 }

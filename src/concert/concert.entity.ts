@@ -11,9 +11,12 @@ export class Concert {
   @Column()
   description: string;
 
-  @Column({nullable: true})
+  @Column()
   date: string;
 
   @Column()
-  total_seats: number;
+  totalSeats: number;
+
+  @Column({nullable: true})
+  coverImage: string;
 }

@@ -21,11 +21,12 @@ export class ConcertService {
   async createConcert(payload: CreateConcertDto) {
     try {
       const concert = new Concert();
-payload
+
       concert.name = payload.name;
       concert.description = payload.description;
-      concert.total_seats = parseInt(payload.total_seats);
+      concert.totalSeats = payload.totalSeats;
       concert.date = payload.date;
+      concert.coverImage = payload.coverImage;
 
       await this.concertRepository.save(concert);
 

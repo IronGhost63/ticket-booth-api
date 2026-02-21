@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { FileInterceptor } from "@nestjs/platform-express";
 import { ConcertService } from './concert.service';
 import { CreateConcertDto } from './dto/create-concert.dto';
 import { UpdateConcertDto } from './dto/update-concert.dto';
@@ -15,9 +16,24 @@ export class ConcertController {
   ) {}
 
   @Post()
+  @UseInterceptors(FileInterceptor('cover'))
   @Roles(Role.ADMIN)
-  createConcert(@Body() concert: CreateConcertDto) {
-    return this.concertService.createConcert(concert);
+  createConcert(@Body() concert: CreateConcertDto, @UploadedFile() cover: Express.Multer.File) {
+    const payload = new CreateConcertDto();
+
+    payload.name = concert.name;
+    payload.description = concert.description;
+    payload.totalSeats = Number(concert.totalSeats);
+    payload.date = String(concert.date);
+
+    if ( cover ) {
+      payload.coverImage = cover.filename;
+    }
+
+    console.log(concert);
+    console.log(payload)
+
+    return this.concertService.createConcert(payload);
   }
 
   @Get()
