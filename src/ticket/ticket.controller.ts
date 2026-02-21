@@ -57,10 +57,12 @@ export class TicketController {
   @Post()
   @Roles(Role.ADMIN, Role.USER)
   reserveTicket(@Body() payload: CreateTicketDto, @Request() req) {
-    if ( req.user.roles === Role.USER && payload.userId !== req.user.id ) {
-      throw new BadRequestException('Invalid user id');
-    }
+    const updatePayload = new CreateTicketDto();
 
-    return this.ticketService.createTicket(payload);
+    updatePayload.seatNumber = payload.seatNumber;
+    updatePayload.concertId = payload.concertId;
+    updatePayload.userId = req.user.id;
+
+    return this.ticketService.createTicket(updatePayload);
   }
 }
