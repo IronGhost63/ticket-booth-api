@@ -9,13 +9,13 @@ import { Roles } from 'src/auth/roles.decorator';
 import { Role } from "src/auth/roles.enum";
 
 @Controller('concert')
-@UseGuards(AuthGuard('jwt'), RolesGuard)
 export class ConcertController {
   constructor(
     private readonly concertService: ConcertService
   ) {}
 
   @Post()
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @UseInterceptors(FileInterceptor('cover'))
   @Roles(Role.ADMIN)
   createConcert(@Body() concert: CreateConcertDto, @UploadedFile() cover: Express.Multer.File) {
@@ -47,12 +47,14 @@ export class ConcertController {
   }
 
   @Patch(':id')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(Role.ADMIN)
   updateConcert(@Param('id') id: number, @Body() updateConcertDto: UpdateConcertDto) {
     return this.concertService.updateConcert(id, updateConcertDto);
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(Role.ADMIN)
   deleteConcert(@Param('id') id: number) {
     return this.concertService.deleteConcert(id);
