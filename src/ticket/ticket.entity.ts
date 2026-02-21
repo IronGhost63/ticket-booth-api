@@ -29,7 +29,7 @@ export class Ticket {
 
   @BeforeInsert()
   createSignature() {
-    const random = this.status === 'active' ? 'active' : Math.random();
+    const random = this.status === 'active' ? 'active' : `${Math.random()}-${Date.now()}` ;
 
     this.signature = hash('sha256', `${this.seatNumber}.${this.concertId}.${random}`);
   }
