@@ -1,6 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-import { Concert } from "src/concert/concert.entity";
-import { User } from "src/user/user.entity";
+import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert } from 'typeorm';
+import { hash } from 'crypto';
 
 export enum TicketStatus {
   ACTIVE = "active",
@@ -13,11 +12,9 @@ export class Ticket {
   @PrimaryGeneratedColumn()
   id: number;
 
-  // @ManyToOne(() => Concert, (concert) => concert.id)
   @Column()
   concertId: number;
 
-  // @ManyToOne(() => User, user => user.id)
   @Column()
   userId: number;
 
@@ -26,4 +23,14 @@ export class Ticket {
 
   @Column({default: 'active'})
   status: string;
+
+  @Column({unique: true})
+  signature: string;
+
+  @BeforeInsert()
+  createSignature() {
+    const random = this.status === 'active' ? 'active' : Math.random();
+
+    this.signature = hash('sha256', `${this.seatNumber}.${this.concertId}.${random}`);
+  }
 }
