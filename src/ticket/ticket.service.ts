@@ -109,8 +109,6 @@ export class TicketService {
       ticket.date = data.concert_date;
       ticket.status = data.ticket_status;
 
-      console.log(ticket);
-
       return ticket;
     });
 
