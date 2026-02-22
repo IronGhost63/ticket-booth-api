@@ -67,7 +67,7 @@ export class ConcertService {
         throw new BadRequestException('Requested concert not exists');
       }
 
-      return {message: 'Concert has been cancelled'};
+      return {message: 'Concert has been deleted'};
     } catch( error ) {
       this.logger.error(`Unable to delete concert: ${error.message}`);
 
