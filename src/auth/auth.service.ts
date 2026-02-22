@@ -2,12 +2,13 @@ import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from "@nestjs/typeorm";
 import { Response } from "express";
-import { hash, compare } from 'bcrypt';
+import { compare } from 'bcrypt';
 import { Repository } from "typeorm";
 import { UserService } from 'src/user/user.service';
 import { RefreshToken } from './refresh-token.entity';
 import { jwtConstants } from "src/constant";
 import { RefreshDto } from "./dto/refresh.dto";
+import ms from "ms";
 
 @Injectable()
 export class AuthService {
@@ -50,33 +51,35 @@ export class AuthService {
         throw new UnauthorizedException('Invalid credentials');
       }
 
-      const refreshExpirationMs = parseInt( jwtConstants.refreshSecretExpires ) * 1000;
-      const expiresRefreshToken = new Date(Date.now() + refreshExpirationMs);
+      // const refreshExpirationMs = parseInt( jwtConstants.refreshSecretExpires ) * 1000;
+      // const expiresRefreshToken = new Date(Date.now() + refreshExpirationMs);
 
       const tokenPayload = {
         userId: user.id,
         roles: user.roles
       };
 
+      const tokenExpire = ms(jwtConstants.secretExpires);
+
       const accessToken = this.jwtService.sign(tokenPayload, {
         secret: jwtConstants.secret,
-        expiresIn: jwtConstants.secretExpires,
+        expiresIn: tokenExpire,
       });
 
-      const refreshToken = this.jwtService.sign(tokenPayload, {
-        secret:jwtConstants.refreshSecret,
-        expiresIn: jwtConstants.refreshSecretExpires,
-      });
+      // const refreshToken = this.jwtService.sign(tokenPayload, {
+      //   secret:jwtConstants.refreshSecret,
+      //   expiresIn: jwtConstants.refreshSecretExpires,
+      // });
 
-      const insertRefreshToken = new RefreshToken();
+      // const insertRefreshToken = new RefreshToken();
 
-      insertRefreshToken.userId = user.id;
-      insertRefreshToken.refreshToken = await hash(refreshToken, 10);
-      insertRefreshToken.expire = expiresRefreshToken.toISOString();
+      // insertRefreshToken.userId = user.id;
+      // insertRefreshToken.refreshToken = await hash(refreshToken, 10);
+      // insertRefreshToken.expire = expiresRefreshToken.toISOString();
 
-      await this.refreshTokenRepository.save(insertRefreshToken);
+      // await this.refreshTokenRepository.save(insertRefreshToken);
 
-      return {accessToken, refreshToken};
+      return {accessToken, tokenExpire};
     } catch (error) {
       this.logger.error(`Login failed for user ${email}: ${error.message}`);
       this.logger.debug(`Stack trace: ${error.stack}`);

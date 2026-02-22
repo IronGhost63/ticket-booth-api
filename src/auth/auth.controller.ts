@@ -1,4 +1,5 @@
 import { Controller, Post, UseGuards, Body } from '@nestjs/common';
+import { AuthGuard } from "@nestjs/passport";
 import { AuthService } from "./auth.service";
 import { AuthDto } from "./dto/auth.dto";
 import { RefreshDto } from "./dto/refresh.dto";
@@ -23,6 +24,14 @@ export class AuthController {
   @Post('refresh')
   @UseGuards(JwtRefreshAuthGuard)
   async refresh( payload: RefreshDto) {
-    await this.authService.refreshToken(payload);
+    return await this.authService.refreshToken(payload);
+  }
+
+  @Post('validate')
+  @UseGuards(AuthGuard('jwt'))
+  async validateToken() {
+    return {
+      message: 'ok',
+    }
   }
 }
