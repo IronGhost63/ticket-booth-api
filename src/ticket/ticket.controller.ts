@@ -39,7 +39,7 @@ export class TicketController {
   @Delete(':id')
   @Roles(Role.ADMIN, Role.USER)
   remove(@Param('id') id: number, @Request() req) {
-    return this.ticketService.remove(id, req.user);
+    return this.ticketService.cancelTicket(id, req.user);
   }
 
   @Get('/concert/:concertId')
