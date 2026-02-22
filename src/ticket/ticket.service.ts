@@ -143,13 +143,14 @@ export class TicketService {
       const ticketStatus = new UpdateTicketStatusDto();
 
       criteria.id = id;
-      ticketStatus.status = 'cancelled';
 
       if ( user.roles !== 'admin') {
         criteria.userId = user.id;
       }
 
-      const cancelledTicket = await this.ticketRepository.update(criteria, ticketStatus);
+      const cancelledTicket = await this.ticketRepository.update(criteria, {
+        status: 'cancelled'
+      });
 
       if ( cancelledTicket.affected === 0 ) {
         throw new BadRequestException('Requested ticket not exists');
@@ -160,6 +161,27 @@ export class TicketService {
       this.logger.error(`Unable to create concert ticket: ${error.message}`);
 
       throw new BadRequestException('Unable to void a concert ticket');
+    }
+  }
+
+  async cancelAllTicket(concertId: number, user: any) {
+    try {
+      const cancelledTicket = await this.ticketRepository.update({
+        userId: user.id,
+        concertId: concertId,
+      }, {
+        status: 'cancelled',
+      });
+
+      if ( cancelledTicket.affected === 0 ) {
+        throw new BadRequestException('Requested ticket not exists');
+      }
+
+      return {message: 'All tickets have been cancelled'};
+    } catch( error ) {
+      this.logger.error(`Unable to create concert ticket: ${error.message}`);
+
+      throw new BadRequestException('Unable to void tickets');
     }
   }
 }
