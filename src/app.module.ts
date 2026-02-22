@@ -7,6 +7,8 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { ConcertModule } from './concert/concert.module';
 import { TicketModule } from './ticket/ticket.module';
+import { Ticket } from "./ticket/ticket.entity";
+import { Concert } from "./concert/concert.entity";
 
 @Module({
   imports: [
@@ -19,6 +21,7 @@ import { TicketModule } from './ticket/ticket.module';
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
+    TypeOrmModule.forFeature([Ticket, Concert]),
     AuthModule,
     UserModule,
     ConcertModule,
