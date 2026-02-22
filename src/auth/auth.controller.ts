@@ -36,7 +36,7 @@ export class AuthController {
   async validateToken(@Request() req ) {
     return {
       message: 'ok',
-      role: 'admin'
+      role: req.user.roles
     }
   }
 }
