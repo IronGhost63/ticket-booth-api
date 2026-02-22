@@ -38,15 +38,15 @@ export class UserService {
     }
   }
 
-  async updateUser( user: User ) {
-    try {
-      await this.userRepository.update({ id: user.id }, user);
-    } catch( error ) {
-      this.logger.error(`Failed to update user: ${error.message}`);
+  // async updateUser( user: User ) {
+  //   try {
+  //     await this.userRepository.update({ id: user.id }, user);
+  //   } catch( error ) {
+  //     this.logger.error(`Failed to update user: ${error.message}`);
 
-      throw new InternalServerErrorException( 'An unexpected error occurred while updating user');
-    }
-  }
+  //     throw new InternalServerErrorException( 'An unexpected error occurred while updating user');
+  //   }
+  // }
 
   async getUserById( userId: number ) {
     return await this.userRepository.findOneBy({ id: userId });
