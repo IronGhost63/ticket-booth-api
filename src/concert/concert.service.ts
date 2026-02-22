@@ -41,10 +41,6 @@ export class ConcertService {
     }
   }
 
-  async getAvailableSeat( concertId: number ) {
-
-  }
-
   async getConcertById( concertId: number ) {
     return await this.concertRepository.findOneBy({ id: concertId });
   }
@@ -54,6 +50,18 @@ export class ConcertService {
   }
 
   async deleteConcert(id: number) {
-    return `This action removes a #${id} concert`;
+    try {
+      const deleted = await this.concertRepository.delete({id});
+
+      if ( deleted.affected === 0 ) {
+        throw new BadRequestException('Requested concert not exists');
+      }
+
+      return {message: 'Concert has been cancelled'};
+    } catch( error ) {
+      this.logger.error(`Unable to delete concert: ${error.message}`);
+
+      throw new BadRequestException('Unable to delete a concert');
+    }
   }
 }
