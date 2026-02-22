@@ -4,6 +4,7 @@ import { Repository } from "typeorm";
 import { Concert } from './concert.entity';
 import { CreateConcertDto } from './dto/create-concert.dto';
 import { UpdateConcertDto } from './dto/update-concert.dto';
+import { validate } from "class-validator";
 
 @Injectable()
 export class ConcertService {
@@ -20,13 +21,22 @@ export class ConcertService {
 
   async createConcert(payload: CreateConcertDto) {
     try {
-      const concert = new Concert();
+      const concert = new CreateConcertDto();
 
       concert.name = payload.name;
       concert.description = payload.description;
       concert.totalSeats = payload.totalSeats;
       concert.date = payload.date;
       concert.coverImage = payload.coverImage;
+
+      const validateErrors = await validate(concert);
+
+      if ( validateErrors.length > 0 ) {
+        this.logger.error('Invalid payload');
+        this.logger.error(validateErrors);
+
+        throw new BadRequestException( 'Invalid payload' );
+      }
 
       await this.concertRepository.save(concert);
 

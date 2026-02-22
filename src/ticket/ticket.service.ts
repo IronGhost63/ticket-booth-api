@@ -5,9 +5,10 @@ import { Ticket } from "./ticket.entity";
 import { TicketDto } from "./dto/ticket.dto";
 import { Concert } from "src/concert/concert.entity";
 import { CreateTicketDto } from './dto/create-ticket.dto';
-import { UpdateTicketDto, UpdateTicketCriteriaDto, UpdateTicketStatusDto } from './dto/update-ticket.dto';
+import { UpdateTicketCriteriaDto, UpdateTicketStatusDto } from './dto/update-ticket.dto';
 import { ConcertService } from "src/concert/concert.service";
 import { UserService } from "src/user/user.service";
+import { validate } from "class-validator";
 
 @Injectable()
 export class TicketService {
@@ -21,6 +22,15 @@ export class TicketService {
   ) {}
 
   async createTicket(ticket: CreateTicketDto) {
+    const validateErrors = await validate(ticket);
+
+    if ( validateErrors.length > 0 ) {
+      this.logger.error('Invalid payload');
+      this.logger.error(validateErrors);
+
+      throw new BadRequestException('Invalid payload');
+    }
+
     const user = await this.userService.getUserById( ticket.userId );
     const concert = await this.concertService.getConcertById( ticket.concertId );
     const maxSeat = concert?.totalSeats || 200;

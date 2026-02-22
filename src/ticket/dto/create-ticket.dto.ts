@@ -1,6 +1,8 @@
 import { IsNumber, IsNotEmpty } from "class-validator";
 
 export class CreateTicketDto {
+  id: number;
+
   @IsNumber()
   @IsNotEmpty()
   concertId: number;
@@ -9,6 +11,5 @@ export class CreateTicketDto {
   @IsNotEmpty()
   userId: number;
 
-  @IsNotEmpty()
   seatNumber: number;
 }

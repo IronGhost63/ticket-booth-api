@@ -1,6 +1,8 @@
 import { IsString, IsNumber, IsNotEmpty } from "class-validator";
 
 export class CreateConcertDto {
+  id: number;
+
   @IsString({ message: 'Name must be a string' })
   @IsNotEmpty({ message: 'Name should not be empty' })
   name: string;

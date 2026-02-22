@@ -5,7 +5,7 @@ export class Concert {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({nullable: false})
   name: string;
 
   @Column()
