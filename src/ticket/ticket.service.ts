@@ -5,9 +5,10 @@ import { Ticket } from "./ticket.entity";
 import { TicketDto } from "./dto/ticket.dto";
 import { Concert } from "src/concert/concert.entity";
 import { CreateTicketDto } from './dto/create-ticket.dto';
-import { UpdateTicketDto } from './dto/update-ticket.dto';
+import { UpdateTicketDto, UpdateTicketCriteriaDto, UpdateTicketStatusDto } from './dto/update-ticket.dto';
 import { ConcertService } from "src/concert/concert.service";
 import { UserService } from "src/user/user.service";
+import e from "express";
 
 @Injectable()
 export class TicketService {
@@ -23,10 +24,33 @@ export class TicketService {
   async createTicket(ticket: CreateTicketDto) {
     const user = await this.userService.getUserById( ticket.userId );
     const concert = await this.concertService.getConcertById( ticket.concertId );
-    const existingTicket = await this.ticketRepository.findOneBy( { concertId: ticket.concertId, seatNumber: ticket.seatNumber, status: 'active'} );
+    const maxSeat = concert?.totalSeats || 200;
 
-    if ( existingTicket ) {
-      throw new BadRequestException('Ticket for selected seat is already sold');
+    if ( !ticket.seatNumber ) {
+      const soldTickets = await this.ticketRepository.find({
+        select: {
+          seatNumber: true
+        },
+        where: {
+          concertId: ticket.concertId,
+          status: 'active',
+        }
+      });
+
+      const soldSeatNumbers = new Set( soldTickets.map( item => item.seatNumber ) );
+      let randomSeat = 1;
+
+      do {
+        randomSeat = Math.floor(Math.random() * maxSeat) + 1;
+      } while (soldSeatNumbers.has(randomSeat));
+
+      ticket.seatNumber = randomSeat;
+    } else {
+      const existingTicket = await this.ticketRepository.findOneBy( { concertId: ticket.concertId, seatNumber: ticket.seatNumber, status: 'active'} );
+
+      if ( existingTicket ) {
+        throw new BadRequestException('Ticket for selected seat is already sold');
+      }
     }
 
     if ( !user ) {
@@ -111,16 +135,40 @@ export class TicketService {
   }
 
   async getUserTicket(id: number, userId: number) {
-    console.log({id, userId});
-
     return await this.ticketRepository.findOneBy({id, userId})
   }
 
-  update(id: number, updateTicketDto: UpdateTicketDto) {
+  async update(id: number, updateTicketDto: UpdateTicketDto) {
     return `This action updates a #${id} ticket`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} ticket`;
+  async remove(id: number, user: any) {
+    try {
+      const criteria = new UpdateTicketCriteriaDto();
+      const ticketStatus = new UpdateTicketStatusDto();
+
+      criteria.id = id;
+      ticketStatus.status = 'cancelled';
+
+      if ( user.roles !== 'admin') {
+        criteria.userId = user.id;
+      }
+
+      const cancelledTicket = await this.ticketRepository.update(criteria, ticketStatus);
+
+      if ( cancelledTicket.affected === 0 ) {
+        throw new BadRequestException('Requested ticket not exists');
+      }
+
+      return {message: 'Ticket has been cancelled'};
+    } catch( error ) {
+      this.logger.error(`Unable to create concert ticket: ${error.message}`);
+
+      throw new BadRequestException('Unable to void a concert ticket');
+    }
+  }
+
+  async reserveOneTicket(concertId: number) {
+
   }
 }
