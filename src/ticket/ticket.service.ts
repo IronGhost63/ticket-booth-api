@@ -150,7 +150,6 @@ export class TicketService {
   async cancelTicket(id: number, user: any) {
     try {
       const criteria = new UpdateTicketCriteriaDto();
-      const ticketStatus = new UpdateTicketStatusDto();
 
       criteria.id = id;
 
