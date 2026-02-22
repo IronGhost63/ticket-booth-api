@@ -1,4 +1,4 @@
-import { Controller, Post, UseGuards, Body } from '@nestjs/common';
+import { Controller, Post, UseGuards, Body, Request } from '@nestjs/common';
 import { AuthGuard } from "@nestjs/passport";
 import { AuthService } from "./auth.service";
 import { AuthDto } from "./dto/auth.dto";
@@ -32,21 +32,11 @@ export class AuthController {
 
   @Post('validate')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(Role.ADMIN)
-  async validateAdminToken() {
+  @Roles(Role.ADMIN, Role.USER)
+  async validateToken(@Request() req ) {
     return {
       message: 'ok',
       role: 'admin'
-    }
-  }
-
-  @Post('validate')
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(Role.USER)
-  async validateUserToken() {
-    return {
-      message: 'ok',
-      role: 'user'
     }
   }
 }
