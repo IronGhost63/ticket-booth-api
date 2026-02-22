@@ -17,7 +17,7 @@ export class AppController {
     return req.user;
   }
 
-  @Get('stat')
+  @Get('stats')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(Role.ADMIN)
   getStat() {
