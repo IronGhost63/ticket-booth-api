@@ -8,7 +8,6 @@ import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto, UpdateTicketCriteriaDto, UpdateTicketStatusDto } from './dto/update-ticket.dto';
 import { ConcertService } from "src/concert/concert.service";
 import { UserService } from "src/user/user.service";
-import e from "express";
 
 @Injectable()
 export class TicketService {
