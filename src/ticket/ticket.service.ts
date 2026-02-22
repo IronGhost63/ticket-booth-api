@@ -141,7 +141,7 @@ export class TicketService {
     return `This action updates a #${id} ticket`;
   }
 
-  async remove(id: number, user: any) {
+  async cancelTicket(id: number, user: any) {
     try {
       const criteria = new UpdateTicketCriteriaDto();
       const ticketStatus = new UpdateTicketStatusDto();
