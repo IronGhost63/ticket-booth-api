@@ -107,6 +107,9 @@ export class TicketService {
       ticket.userId = data.ticket_userId;
       ticket.seatNumber = data.ticket_seatNumber;
       ticket.date = data.concert_date;
+      ticket.status = data.ticket_status;
+
+      console.log(ticket);
 
       return ticket;
     });
@@ -185,6 +188,8 @@ export class TicketService {
       if ( cancelledTicket.affected === 0 ) {
         throw new BadRequestException('Requested ticket not exists');
       }
+
+      console.log(cancelledTicket);
 
       return {message: 'All tickets have been cancelled'};
     } catch( error ) {

@@ -20,4 +20,5 @@ export class TicketDto {
   seatNumber: number;
 
   date: string;
+  status: string;
 }
