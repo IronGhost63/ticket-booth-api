@@ -30,9 +30,6 @@ export class ConcertController {
       payload.coverImage = cover.filename;
     }
 
-    console.log(concert);
-    console.log(payload)
-
     return this.concertService.createConcert(payload);
   }
 

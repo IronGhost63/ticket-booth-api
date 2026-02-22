@@ -4,6 +4,9 @@ import { AuthService } from "./auth.service";
 import { AuthDto } from "./dto/auth.dto";
 import { RefreshDto } from "./dto/refresh.dto";
 import { JwtRefreshAuthGuard } from "./guard/jwt-refresh-auth.guard";
+import { RolesGuard } from "./guard/roles.guard";
+import { Roles } from "./roles.decorator";
+import { Role } from "./roles.enum";
 
 @Controller('auth')
 export class AuthController {
@@ -28,10 +31,22 @@ export class AuthController {
   }
 
   @Post('validate')
-  @UseGuards(AuthGuard('jwt'))
-  async validateToken() {
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
+  async validateAdminToken() {
     return {
       message: 'ok',
+      role: 'admin'
+    }
+  }
+
+  @Post('validate')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.USER)
+  async validateUserToken() {
+    return {
+      message: 'ok',
+      role: 'user'
     }
   }
 }
