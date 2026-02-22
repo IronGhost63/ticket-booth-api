@@ -137,10 +137,6 @@ export class TicketService {
     return await this.ticketRepository.findOneBy({id, userId})
   }
 
-  async update(id: number, updateTicketDto: UpdateTicketDto) {
-    return `This action updates a #${id} ticket`;
-  }
-
   async cancelTicket(id: number, user: any) {
     try {
       const criteria = new UpdateTicketCriteriaDto();
@@ -165,9 +161,5 @@ export class TicketService {
 
       throw new BadRequestException('Unable to void a concert ticket');
     }
-  }
-
-  async reserveOneTicket(concertId: number) {
-
   }
 }

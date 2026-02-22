@@ -30,12 +30,6 @@ export class TicketController {
     return this.ticketService.getUserTicket(id, req.user.id);
   }
 
-  @Patch(':id')
-  @Roles(Role.ADMIN)
-  update(@Param('id') id: number, @Body() updateTicketDto: UpdateTicketDto) {
-    return this.ticketService.update(id, updateTicketDto);
-  }
-
   @Delete(':id')
   @Roles(Role.ADMIN, Role.USER)
   remove(@Param('id') id: number, @Request() req) {
