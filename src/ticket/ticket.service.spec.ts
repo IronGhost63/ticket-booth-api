@@ -1,14 +1,18 @@
 import * as fs from 'node:fs/promises';
 import { Test, TestingModule } from "@nestjs/testing";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { TicketService } from "./ticket.service";
-import { Ticket } from "./ticket.entity";
-import { TicketDto, soldTicketDto } from "./dto/ticket.dto";
-import { CreateTicketDto } from "./dto/create-ticket.dto";
-import { ConcertService } from "src/concert/concert.service";
+
 import { Concert } from "src/concert/concert.entity";
-import { UserService } from "src/user/user.service";
+import { Ticket } from "./ticket.entity";
 import { User } from "src/user/user.entity";
+
+import { TicketDto, SoldTiccketDto } from "./dto/ticket.dto";
+import { CreateTicketDto } from "./dto/create-ticket.dto";
+
+import { ConcertService } from "src/concert/concert.service";
+import { TicketService } from "./ticket.service";
+import { UserService } from "src/user/user.service";
+
 
 describe('Ticket Service Unit Spec', () => {
   let ticketService: TicketService;
@@ -34,6 +38,7 @@ describe('Ticket Service Unit Spec', () => {
           type: 'better-sqlite3',
           database: './test/mock-ticket.db',
           entities: [__dirname + '/**/*.entity{.ts,.js}'],
+          autoLoadEntities: true,
           synchronize: true,
         }),
         TypeOrmModule.forFeature([Ticket, Concert, User]),
@@ -61,7 +66,7 @@ describe('Ticket Service Unit Spec', () => {
       newTicket.userId = 1;
       newTicket.concertId = 1;
 
-      expect( await ticketService.createTicket(newTicket) ).toBeInstanceOf(CreateTicketDto);
+      expect( await ticketService.createTicket(newTicket) ).toBeInstanceOf(Ticket);
     })
   });
 
@@ -77,7 +82,7 @@ describe('Ticket Service Unit Spec', () => {
     it('Should list all available seats for concertId:1', async () => {
       const seats = await ticketService.getSeatAvailability(1);
 
-      expect(seats.every( seat => seat instanceof soldTicketDto)).toBeTruthy()
+      expect(seats.every( seat => seat instanceof SoldTiccketDto)).toBeTruthy()
     })
   })
 });

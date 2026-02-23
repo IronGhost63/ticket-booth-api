@@ -23,7 +23,7 @@ export class TicketDto {
   status: string;
 }
 
-export class soldTicketDto {
+export class SoldTiccketDto {
   seat: number;
   status: string;
 }

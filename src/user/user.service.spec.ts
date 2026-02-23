@@ -28,6 +28,7 @@ describe('User Service Unit Spec', () => {
           type: 'better-sqlite3',
           database: './test/mock-user.db',
           entities: [__dirname + '/**/*.entity{.ts,.js}'],
+          autoLoadEntities: true,
           synchronize: true,
         }),
         TypeOrmModule.forFeature([User]),

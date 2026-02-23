@@ -2,7 +2,7 @@ import { Injectable, Logger, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Ticket } from "./ticket.entity";
-import { TicketDto } from "./dto/ticket.dto";
+import { TicketDto, SoldTiccketDto } from "./dto/ticket.dto";
 import { Concert } from "src/concert/concert.entity";
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketCriteriaDto } from './dto/update-ticket.dto';
@@ -131,10 +131,12 @@ export class TicketService {
       const seat = i + 1;
       const soldTicket = reservedSeats.find( ticket => ticket.seatNumber === seat );
 
-      return {
-        seat: seat,
-        status: soldTicket ? 'sold' : 'available',
-      };
+      const ticketDetail = new SoldTiccketDto();
+
+      ticketDetail.seat = seat;
+      ticketDetail.status = soldTicket ? 'sold' : 'available';
+
+      return ticketDetail;
     });
 
     return totalSeats;
