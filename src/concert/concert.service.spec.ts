@@ -1,7 +1,6 @@
 import * as fs from 'node:fs/promises';
 import { Test, TestingModule } from "@nestjs/testing";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { MulterModule } from "@nestjs/platform-express";
 
 import { Concert } from './concert.entity';
 import { Ticket } from "src/ticket/ticket.entity";
