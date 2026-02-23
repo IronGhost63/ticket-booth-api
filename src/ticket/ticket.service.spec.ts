@@ -3,7 +3,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { TicketService } from "./ticket.service";
 import { Ticket } from "./ticket.entity";
-import { TicketDto } from "./dto/ticket.dto";
+import { TicketDto, soldTicketDto } from "./dto/ticket.dto";
 import { CreateTicketDto } from "./dto/create-ticket.dto";
 import { ConcertService } from "src/concert/concert.service";
 import { Concert } from "src/concert/concert.entity";
@@ -64,4 +64,20 @@ describe('Ticket Service Unit Spec', () => {
       expect( await ticketService.createTicket(newTicket) ).toBeInstanceOf(CreateTicketDto);
     })
   });
+
+  describe('List Reserved Seats', () => {
+    it('Should list all reserved ticket for concertId:2', async () => {
+      const tickets = await ticketService.getConcertTickets(1);
+
+      expect(tickets.every( ticket => ticket instanceof Ticket )).toBeTruthy();
+    });
+  });
+
+  describe('List Available Seats', () => {
+    it('Should list all available seats for concertId:1', async () => {
+      const seats = await ticketService.getSeatAvailability(1);
+
+      expect(seats.every( seat => seat instanceof soldTicketDto)).toBeTruthy()
+    })
+  })
 });

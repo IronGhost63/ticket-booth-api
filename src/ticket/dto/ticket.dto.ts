@@ -22,3 +22,8 @@ export class TicketDto {
   date: string;
   status: string;
 }
+
+export class soldTicketDto {
+  seat: number;
+  status: string;
+}
