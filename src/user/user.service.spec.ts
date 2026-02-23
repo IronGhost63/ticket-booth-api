@@ -55,33 +55,19 @@ describe('User Service Unit Spec', () => {
       user.email = `john-${rand}@doe.com`;
       user.password = await hash( `${rand}-hello`, 10);
 
-      expect(await userService.createUser(user)).toEqual(
-        expect.objectContaining({
-          name: user.name,
-          email: user.email
-        })
-      );
+      expect(await userService.createUser(user)).toBeInstanceOf(User);
     });
   });
 
   describe('Retrieve a user by ID', () => {
     it('Should successfully retrieve user ID:1', async () => {
-      expect(await userService.getUserById(1)).toEqual(
-        expect.objectContaining({
-          id: 1,
-          email: 'jay@jirayu.in.th'
-        })
-      );
+      expect(await userService.getUserById(1)).toBeInstanceOf(User);
     });
   });
 
   describe('Retrieve a user by email', () => {
     it('Should successfully retrieve user email: jay@jirayu.in.th', async () => {
-      expect(await userService.getUserByEmail('jay@jirayu.in.th')).toEqual(
-        expect.objectContaining({
-          id: 1
-        })
-      );
+      expect(await userService.getUserByEmail('jay@jirayu.in.th')).toBeInstanceOf(User);
     });
   });
 

@@ -4,6 +4,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { TicketService } from "./ticket.service";
 import { Ticket } from "./ticket.entity";
 import { TicketDto } from "./dto/ticket.dto";
+import { CreateTicketDto } from "./dto/create-ticket.dto";
 import { ConcertService } from "src/concert/concert.service";
 import { Concert } from "src/concert/concert.entity";
 import { UserService } from "src/user/user.service";
@@ -51,5 +52,16 @@ describe('Ticket Service Unit Spec', () => {
 
       expect( tickets.every( ticket => ticket instanceof TicketDto )).toBeTruthy();
     })
-  })
+  });
+
+  describe('Reserving Seat', () => {
+    it('Should create new ticket for ConcertId:1 for UserId:1', async () => {
+      const newTicket = new CreateTicketDto();
+
+      newTicket.userId = 1;
+      newTicket.concertId = 1;
+
+      expect( await ticketService.createTicket(newTicket) ).toBeInstanceOf(CreateTicketDto);
+    })
+  });
 });
