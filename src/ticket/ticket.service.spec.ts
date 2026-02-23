@@ -84,5 +84,32 @@ describe('Ticket Service Unit Spec', () => {
 
       expect(seats.every( seat => seat instanceof SoldTiccketDto)).toBeTruthy()
     })
+  });
+
+  describe('Get Ticket Detail', () => {
+    it('Should return ticket detail of ticketId:1', async () => {
+      expect( await ticketService.getTicketById(1) ).toBeInstanceOf(Ticket);
+    })
+  });
+
+  describe('Cancel One Ticket', () => {
+    it('Should change ticket status to cancelled of ticketId:1', async () => {
+      await ticketService.cancelTicket(1, {id: 3, roles: 'user'});
+
+      const ticketDetail = await ticketService.getTicketById(1);
+
+      expect( ticketDetail?.status ).toBe('cancelled');
+    })
+  });
+
+  describe('Cancel All Tickets', () => {
+    it('Should change ticket status to cancelled for concertId:1 under userId:3', async () => {
+      await ticketService.cancelAllTicket(1, {id: 3, roles: 'user'});
+
+      const userTickets = await ticketService.getUserTickets(3);
+      const currentConcertTicket = userTickets.filter( item => item.concertId === 1);
+
+      expect(currentConcertTicket.every( ticket => ticket.status === 'cancelled' )).toBeTruthy();
+    });
   })
 });

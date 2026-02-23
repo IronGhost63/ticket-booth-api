@@ -189,8 +189,6 @@ export class TicketService {
         throw new BadRequestException('Requested ticket not exists');
       }
 
-      console.log(cancelledTicket);
-
       return {message: 'All tickets have been cancelled'};
     } catch( error ) {
       this.logger.error(`Unable to create concert ticket: ${error.message}`);
