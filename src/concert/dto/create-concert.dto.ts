@@ -16,3 +16,8 @@ export class CreateConcertDto {
 
   coverImage: string;
 }
+
+export class CreateConcertMessageDto {
+  concertId: number;
+  message: string;
+}

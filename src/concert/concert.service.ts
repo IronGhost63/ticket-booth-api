@@ -2,7 +2,7 @@ import { Injectable, Logger, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Concert } from './concert.entity';
-import { CreateConcertDto } from './dto/create-concert.dto';
+import { CreateConcertDto, CreateConcertMessageDto } from './dto/create-concert.dto';
 import { UpdateConcertDto } from './dto/update-concert.dto';
 import { validate } from "class-validator";
 
@@ -40,10 +40,12 @@ export class ConcertService {
 
       await this.concertRepository.save(concert);
 
-      return {
-        message: 'Concert created successfully',
-        concertId: concert.id,
-      }
+      const resultMessage = new CreateConcertMessageDto();
+
+      resultMessage.concertId = concert.id;
+      resultMessage.message = 'Concert created successfully';
+
+      return resultMessage;
     } catch ( error ) {
       this.logger.error(`Failed to create concert: ${error.message}`);
 
