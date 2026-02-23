@@ -1,3 +1,4 @@
+import * as fs from 'node:fs/promises';
 import { Test, TestingModule } from "@nestjs/testing";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { hash } from 'bcrypt';
@@ -9,12 +10,23 @@ describe('User Service Unit Spec', () => {
   let userService: UserService;
   let moduleRef: TestingModule;
 
+  const source = 'test/mock.db';
+  const destination = 'test/mock-user.db';
+
+  beforeAll(async () => {
+    await fs.copyFile(source, destination);
+  });
+
+  afterAll(async () => {
+    await fs.unlink(destination)
+  });
+
   beforeEach(async () => {
     moduleRef = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRoot({
           type: 'better-sqlite3',
-          database: './test/mock.db',
+          database: './test/mock-user.db',
           entities: [__dirname + '/**/*.entity{.ts,.js}'],
           synchronize: true,
         }),

@@ -5,7 +5,7 @@ import { Ticket } from "./ticket.entity";
 import { TicketDto } from "./dto/ticket.dto";
 import { Concert } from "src/concert/concert.entity";
 import { CreateTicketDto } from './dto/create-ticket.dto';
-import { UpdateTicketCriteriaDto, UpdateTicketStatusDto } from './dto/update-ticket.dto';
+import { UpdateTicketCriteriaDto } from './dto/update-ticket.dto';
 import { ConcertService } from "src/concert/concert.service";
 import { UserService } from "src/user/user.service";
 import { validate } from "class-validator";
